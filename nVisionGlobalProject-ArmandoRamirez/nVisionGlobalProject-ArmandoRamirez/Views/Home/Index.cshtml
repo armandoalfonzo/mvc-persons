@@ -1,0 +1,98 @@
+﻿@model  nVisionGlobalProject_ArmandoRamirez.Models.PersonViewModel
+
+    <div class="border p-5" >
+        <div class="row">
+            <div class="offset-1 col-4">
+                <form id="Form" asp-controller="Home" asp-action="Index" method="post">
+                    <div class="form-group">
+                        <input asp-for="Firstname" class="form-control" placeholder="First name" required />
+                        <span asp-validation-for="Firstname" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input asp-for="LastName" class="form-control" placeholder="Last name" />
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input asp-for="Telephone" class="form-control" placeholder="Phone number" />
+                        <span asp-validation-for="Telephone" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <select asp-for="Gender" class="form-control" placeholder="Phone number">
+                            <option disabled selected>Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                        <span asp-validation-for="Gender" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input asp-for="Ocupation" class="form-control" placeholder="Ocupation" />
+                        <span asp-validation-for="Ocupation" class="text-danger"></span>
+                    </div>
+                    <input type="submit" class="btn btn-primary btn-block" value="Save" />
+                </form>
+            </div>
+            <div class="offset-1 col-6">
+                <button class="btn btn-block btn-primary mb-3" id="retrieve">Retrieve</button>
+                <table id="Table" class="table">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Firstname</th>
+                            <th>Last Name</th>
+                            <th>Telephone</th>
+                            <th>Gender</th>
+                            <th>Ocupation</th>
+                        </tr>
+                    </thead>
+                    <tbody id="TableBody">
+                        <tr>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+@section scripts{
+    <script>
+        $("#retrieve").click(function () {
+            PopulateTable();
+        });
+
+        $().ready(function () {
+
+            $('#TableBody').hide
+        });
+
+        function PopulateTable() {
+            $('#TableBody').empty();
+            $.ajax(
+            {
+                type: "GET",
+                url: './Home/GetJson',
+                data: "{}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                cache: false,
+                success: function (data) {
+
+                    $.each(data, function (i, item) {
+
+                        $('#TableBody').append('<tr><td>' + item.Firstname + '</td>' +
+                            '<td> ' + item.LastName + '</td >' +
+                            '<td> ' + item.Telephone + '</td>' +
+                            '<td> ' + item.Gender + '</td >' +
+                            '<td> ' + item.Ocupation + '</td></tr > ');
+                    });
+                },
+
+                error: function (msg) {
+
+                    alert(msg.responseText);
+                }
+                });
+            $('#TableBody').show
+        }
+
+    </script>
+}
